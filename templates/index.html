@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Greek Lemma Analyzer</title>
+</head>
+<body>
+    <h1>Greek Lemma and Morphology</h1>
+    <form method="post">
+        <input type="text" name="word" placeholder="Enter Greek word" required>
+        <button type="submit">Analyze</button>
+    </form>
+    {% if result %}
+    <h2>Analysis</h2>
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Token</th>
+            <th>Lemma</th>
+            <th>POS</th>
+            <th>Morphology</th>
+        </tr>
+        {% for token in result %}
+        <tr>
+            <td>{{ token.text }}</td>
+            <td>{{ token.lemma }}</td>
+            <td>{{ token.pos }}</td>
+            <td>
+                {% for key, val in token.morph.items() %}
+                    {{ key }}={{ val }}<br>
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</body>
+</html>
