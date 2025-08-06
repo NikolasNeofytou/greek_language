@@ -1,9 +1,12 @@
 from flask import Flask, request, render_template
 import spacy
+from transformers import pipeline
 
 nlp = spacy.load("el_core_news_sm")
+translator = pipeline("translation", model="Helsinki-NLP/opus-mt-el-en")
 
 app = Flask(__name__)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -14,13 +17,16 @@ def index():
             doc = nlp(word)
             result = []
             for token in doc:
+                meaning = translator(token.text)[0]['translation_text']
                 result.append({
                     'text': token.text,
                     'lemma': token.lemma_,
                     'pos': token.pos_,
-                    'morph': token.morph.to_dict()
+                    'morph': token.morph.to_dict(),
+                    'meaning': meaning
                 })
     return render_template('index.html', result=result)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
